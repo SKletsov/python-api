@@ -54,7 +54,7 @@ def send_tcp():
     return resp(200, {"result": "ok"})
 
 def getUnixTime():
-    row = str(time.time()) 
+    row = str(round(time.time() * 1000000000))
     return row 
 
 if __name__ == '__main__':
