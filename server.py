@@ -3,6 +3,7 @@
 import flask
 import json
 import shutil
+import uuid
 import logging
 import logging.handlers
 import socket
@@ -38,21 +39,19 @@ def get_results():
 def send_udp():
     handler = logging.handlers.SysLogHandler(address = ('0.0.0.0',514),  socktype=socket.SOCK_STREAM)
     my_logger.addHandler(handler)
-    List1 = ['test1','test2','test3']
-    for row in List1:
-        my_logger.info("" +row+'\n')
-        my_logger.handlers[0].flush()
+    row = str(uuid.uuid4())
+    my_logger.info("" +row+'\n')
+    my_logger.handlers[0].flush()
     return resp(200, {"result": "ok"})
 
 
 @app.route('/api/send/tcp/', methods=['GET'])
 def send_tcp():
-    handler = logging.handlers.SysLogHandler(address = ('localhost',514),  socktype=socket.SOCK_STREAM)
+    handler = logging.handlers.SysLogHandler(address = ('0.0.0.0',514),  socktype=socket.SOCK_STREAM)
     my_logger.addHandler(handler)
-    List1 = ['test1','test2','test3']
-    for row in List1:
-        my_logger.info("" +row+'\n')
-        my_logger.handlers[0].flush()
+    row = str(uuid.uuid4())
+    my_logger.info("" +row+'\n')
+    my_logger.handlers[0].flush()
     return resp(200, {"result": "ok"})
 
 

@@ -5,6 +5,7 @@ RUN	apt-get -y update \
 	&& apt-get -y install software-properties-common curl \
 	&& add-apt-repository -y ppa:adiscon/v8-stable \
 	&& apt-get -y update \
+	&& apt-get install rsyslog-gnutls \
 	&& apt-get -y install libfastjson4 \
 	&& apt-get -y install rsyslog \
 	&& rm -r /etc/rsyslog.conf
