@@ -1,3 +1,2 @@
-printf "use ./build.sh --no-cache to disable cache\n"
-docker build $1 -t rsyslog/syslog_appliance_ubuntu:16.04 .
-docker run -p 514:10514 -d rsyslog/syslog_appliance_ubuntu:16.04 
+docker build -t mysyslog .
+docker run  -d --cap-add SYSLOG --restart always -v /var/log:/var/log -p 514:514 -p 514:514/udp --name rsyslog mysyslog
