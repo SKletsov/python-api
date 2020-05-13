@@ -3,6 +3,10 @@
 import flask
 import json
 import shutil
+import logging
+import logging.handlers
+import socket
+
 
 app = flask.Flask(__name__)
 
@@ -30,6 +34,30 @@ def get_results():
     return resp(200, {"result": free})
 
 
+@app.route('/api/send/udp/', methods=['GET'])
+def send_udp():
+    handler = logging.handlers.SysLogHandler(address = ('0.0.0.0',514),  socktype=socket.SOCK_STREAM)
+    my_logger.addHandler(handler)
+    List1 = ['test1','test2','test3']
+    for row in List1:
+        my_logger.info("" +row+'\n')
+        my_logger.handlers[0].flush()
+    return resp(200, {"result": "ok"})
+
+
+@app.route('/api/send/tcp/', methods=['GET'])
+def send_tcp():
+    handler = logging.handlers.SysLogHandler(address = ('localhost',514),  socktype=socket.SOCK_STREAM)
+    my_logger.addHandler(handler)
+    List1 = ['test1','test2','test3']
+    for row in List1:
+        my_logger.info("" +row+'\n')
+        my_logger.handlers[0].flush()
+    return resp(200, {"result": "ok"})
+
+
 if __name__ == '__main__':
     app.debug = True 
+    my_logger = logging.getLogger('MyLogger')
+    my_logger.setLevel(logging.INFO)
     app.run(host='0.0.0.0', port=8085)
