@@ -32,7 +32,7 @@ def page_not_found(e):
 def get_results():
     total, used, free = shutil.disk_usage("/")
     if used / total * 100 >= 90:
-             return resp(500, {"result": free})
+             return resp(503, {"result": free})
     return resp(200, {"result": free})
 
 
