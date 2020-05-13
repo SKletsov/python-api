@@ -2,6 +2,7 @@
 
 import flask
 import json
+import shutil
 
 app = flask.Flask(__name__)
 
@@ -16,11 +17,17 @@ def resp(code, data):
         response=to_json(data)
     )
 
+@app.errorhandler(400)
+def page_not_found(e):
+    return resp(400, {})
 
 
-@app.route('/api/data', methods=['GET'])
+@app.route('/api/memory', methods=['GET'])
 def get_results():
-    return resp(200, {"result": "test"})
+    total, used, free = shutil.disk_usage("/")
+    if used / total * 100 >= 90:
+             return resp(500, {"result": free})
+    return resp(200, {"result": free})
 
 
 if __name__ == '__main__':
