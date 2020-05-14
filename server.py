@@ -87,4 +87,4 @@ if __name__ == '__main__':
     app.debug = True 
     my_logger = logging.getLogger('MyLogger')
     my_logger.setLevel(logging.INFO)
-    app.run(host='0.0.0.0', port=8086)
+    app.run(host='0.0.0.0', port=8080)
