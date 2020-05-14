@@ -31,15 +31,6 @@ def page_not_found(e):
     return resp(400, {})
 
 
-@app.route('/api/memory', methods=['GET'])
-def get_results():
-    total, used, free = shutil.disk_usage("/")
-    if used / total * 100 >= 90:
-             return resp(503, {"result": free})
-    return resp(200, {"result": free})
-
-
-@app.route('/api/send/udp/', methods=['GET'])
 def send_udp():
     handler = logging.handlers.SysLogHandler(address = ('0.0.0.0',514),  socktype=socket.SOCK_STREAM)
     my_logger.addHandler(handler)
@@ -47,13 +38,9 @@ def send_udp():
     my_logger.info("" +timeRecord+'\n')
     my_logger.handlers[0].flush()
     send = getFileData(timeRecord)
-    if send == True :
-      return resp(200, {"result": "ok"})
-    else:
-      return resp(500, {"result": "error"})
+    return send
 
 
-@app.route('/api/send/tcp/', methods=['GET'])
 def send_tcp():
     handler = logging.handlers.SysLogHandler(address = ('0.0.0.0',514),  socktype=socket.SOCK_STREAM)
     my_logger.addHandler(handler)
@@ -61,10 +48,7 @@ def send_tcp():
     my_logger.info("" +timeRecord+'\n')
     my_logger.handlers[0].flush()
     send = getFileData(timeRecord)
-    if send == True :
-      return resp(200, {"result": "ok"})
-    else:
-      return resp(500, {"result": "error"})
+    return send
 
 
 def getUnixTime():
@@ -82,6 +66,21 @@ def getFileData(unix):
     else:
        return False
 
+
+@app.route('/api/checker/', methods=['GET'])
+def get_results():
+    total, used, free = shutil.disk_usage("/")
+    if used / total * 100 >= 90:
+             return resp(503, {"error": "memory is "+free+""})
+    else:
+       print ("analize socket")
+       dataTCP = send_tcp()
+       dataUDP = send_udp()
+       if dataTCP == False or dataUDP == False :
+           return resp(500, {"result": "error"})
+       else:
+           return resp(200, {"result": "error"})
+ 
 
 if __name__ == '__main__':
     app.debug = True 
