@@ -60,7 +60,7 @@ def send_tcp():
     timeRecord = getUnixTime()
     my_logger.info("" +timeRecord+'\n')
     my_logger.handlers[0].flush()
-    
+    send = getFileData(timeRecord)
     if send == True :
       return resp(200, {"result": "ok"})
     else:
@@ -77,7 +77,7 @@ def getFileData(unix):
     returned_output = subprocess.check_output(cmd)
     print('Current date is:', returned_output.decode("utf-8"))
     print('cmd',cmd)
-    if int(returned_value) >= 1 :
+    if int(returned_output.decode("utf-8")) >= 1 :
         return True
     else:
        return False
