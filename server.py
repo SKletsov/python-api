@@ -2,12 +2,15 @@
 
 import flask
 import json
+import os
 import shutil
 import uuid
 import time
 import logging
 import logging.handlers
 import socket
+import subprocess
+
 
 
 app = flask.Flask(__name__)
@@ -40,25 +43,48 @@ def get_results():
 def send_udp():
     handler = logging.handlers.SysLogHandler(address = ('0.0.0.0',514),  socktype=socket.SOCK_STREAM)
     my_logger.addHandler(handler)
-    my_logger.info("" +getUnixTime()+'\n')
+    timeRecord = getUnixTime()
+    my_logger.info("" +timeRecord+'\n')
     my_logger.handlers[0].flush()
-    return resp(200, {"result": "ok"})
+    send = getFileData(timeRecord)
+    if send == True :
+      return resp(200, {"result": "ok"})
+    else:
+      return resp(500, {"result": "error"})
 
 
 @app.route('/api/send/tcp/', methods=['GET'])
 def send_tcp():
     handler = logging.handlers.SysLogHandler(address = ('0.0.0.0',514),  socktype=socket.SOCK_STREAM)
     my_logger.addHandler(handler)
-    my_logger.info("" +getUnixTime()+'\n')
+    timeRecord = getUnixTime()
+    my_logger.info("" +timeRecord+'\n')
     my_logger.handlers[0].flush()
-    return resp(200, {"result": "ok"})
+    
+    if send == True :
+      return resp(200, {"result": "ok"})
+    else:
+      return resp(500, {"result": "error"})
+
 
 def getUnixTime():
     row = str(round(time.time() * 1000000000))
     return row 
 
+def getFileData(unix):
+    time.sleep(10)
+    cmd = "docker exec  -it  rsyslog grep -R '"+unix+"'  /var/log/remote/* | wc -l"
+    returned_output = subprocess.check_output(cmd)
+    print('Current date is:', returned_output.decode("utf-8"))
+    print('cmd',cmd)
+    if int(returned_value) >= 1 :
+        return True
+    else:
+       return False
+
+
 if __name__ == '__main__':
     app.debug = True 
     my_logger = logging.getLogger('MyLogger')
     my_logger.setLevel(logging.INFO)
-    app.run(host='0.0.0.0', port=8085)
+    app.run(host='0.0.0.0', port=8086)
