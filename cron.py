@@ -11,7 +11,7 @@ import subprocess
 
 
 def send_udp():
-    handler = logging.handlers.SysLogHandler(address = ('0.0.0.0',514),  socktype=socket.SOCK_STREAM)
+    handler = logging.handlers.SysLogHandler(address = ('0.0.0.0',514),  socktype=socket.SOCK_DGRAM)
     my_logger.addHandler(handler)
     timeRecord = getUnixTime()
     my_logger.info("" +timeRecord+'\n')
