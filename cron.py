@@ -35,12 +35,12 @@ def getUnixTime():
     return row 
 
 def getFileData(unix):
-    time.sleep(10)
-    cmd = "docker exec  -it  rsyslog grep -R '"+unix+"'  /var/log/remote/* | wc -l"
-    returned_output = subprocess.check_output(cmd)
-    print('Current date is:', returned_output.decode("utf-8"))
-    print('cmd',cmd)
-    if int(returned_output.decode("utf-8")) >= 1 :
+    #time.sleep(10)
+    cmd = "/usr/local/bin/docker exec  -it  rsyslog grep -R '"+unix+"'  /var/log/remote/ | wc -l"
+    stream = os.popen(cmd)
+    output = stream.read()
+    print(output)
+    if int(output) >= 1 :
         return True
     else:
        return False
