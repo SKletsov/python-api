@@ -35,21 +35,19 @@ def page_not_found(e):
 @app.route('/api/checker/', methods=['GET'])
 def get_results():
     ###read from file 
-    total, used, free = shutil.disk_usage("/")
-    if used / total * 100 >= 90:
-             return resp(503, {"error": "memory is "+free+""})
+    lines = open("./python.log").read()
+    os.remove("./python.log")
+    print(lines)
+    if lines.find("ok") == -1:
+     return resp(500, {"error": ""+str(lines)+""})  
     else:
-       print ("analize socket")
-       dataTCP = send_tcp()
-       dataUDP = send_udp()
-       if dataTCP == False or dataUDP == False :
-           return resp(500, {"result": "error"})
-       else:
-           return resp(200, {"result": "error"})
- 
+     print("Found 'is' in the string.")
+     return resp(200, {"result": "ok"})   
+    
+    
 
 if __name__ == '__main__':
     app.debug = True 
     my_logger = logging.getLogger('MyLogger')
     my_logger.setLevel(logging.INFO)
-    app.run(host='0.0.0.0', port=8080)
+    app.run(host='0.0.0.0', port=8085)
