@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-
 import flask
 import json
 import os
@@ -11,13 +10,10 @@ import logging.handlers
 import socket
 import subprocess
 
-
-
 app = flask.Flask(__name__)
 
 def to_json(data):
     return json.dumps(data) + "\n"
-
 
 def resp(code, data):
     return flask.Response(
@@ -30,8 +26,6 @@ def resp(code, data):
 def page_not_found(e):
     return resp(400, {})
 
-
-
 @app.route('/api/checker/', methods=['GET'])
 def get_results():
     ###read from file 
@@ -39,13 +33,11 @@ def get_results():
     os.remove("./python.log")
     print(lines)
     if lines.find("ok") == -1:
-     return resp(500, {"error": ""+str(lines)+""})  
+     return resp(500, {"result": "error"})
     else:
      print("Found 'is' in the string.")
      return resp(200, {"result": "ok"})   
     
-    
-
 if __name__ == '__main__':
     app.debug = True 
     my_logger = logging.getLogger('MyLogger')
