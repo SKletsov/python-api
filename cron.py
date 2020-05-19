@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-
 import os
 import shutil
 import uuid
@@ -8,7 +7,6 @@ import logging
 import logging.handlers
 import socket
 import subprocess
-
 
 def send_udp():
     handler = logging.handlers.SysLogHandler(address = ('0.0.0.0',514),  socktype=socket.SOCK_DGRAM)
@@ -19,7 +17,6 @@ def send_udp():
     send = getFileData(timeRecord)
     return send
 
-
 def send_tcp():
     handler = logging.handlers.SysLogHandler(address = ('0.0.0.0',514),  socktype=socket.SOCK_STREAM)
     my_logger.addHandler(handler)
@@ -29,13 +26,12 @@ def send_tcp():
     send = getFileData(timeRecord)
     return send
 
-
 def getUnixTime():
     row = str(round(time.time() * 1000000000))
     return row 
 
 def getFileData(unix):
-    #time.sleep(10)
+    time.sleep(10)
     cmd = "/usr/local/bin/docker exec  -it  rsyslog grep -R '"+unix+"'  /var/log/remote/ | wc -l"
     stream = os.popen(cmd)
     output = stream.read()
@@ -58,7 +54,6 @@ def get_results():
        else:
            writeFile('{ok": "ok "}')
  
-
 def writeFile(data):
     print("Data",data)
     f = open('./python.log', 'w')
@@ -69,3 +64,4 @@ if __name__ == '__main__':
     my_logger = logging.getLogger('MyLogger')
     my_logger.setLevel(logging.INFO)
     get_results()
+ 
